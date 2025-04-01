@@ -1,0 +1,24 @@
+{
+    "name": "patch-annotation-system",
+    "version": "1.0.0",
+    "description": "웹 기반 패치 어노테이션 시스템",
+    "main": "index.js",
+    "scripts": {
+      "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+      "start-frontend": "cd frontend && npm start",
+      "start-backend": "cd backend && npm start",
+      "dev": "concurrently \"npm run start-backend\" \"npm run start-frontend\"",
+      "build": "cd frontend && npm run build"
+    },
+    "keywords": [
+      "annotation",
+      "image",
+      "patch",
+      "classification"
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+      "concurrently": "^8.2.0"
+    }
+  }

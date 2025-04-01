@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  # MongoDB 서비스
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=patchAnnotationDB
+    networks:
+      - app-network
+
+  # 백엔드 서비스
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./uploads:/app/uploads
+      - ./storage:/app/storage
+    environment:
+      - DB_HOST=mongodb
+      - DB_PORT=27017
+      - DB_NAME=patchAnnotationDB
+      - PORT=8080
+      - JWT_SECRET=patch-annotation-secret-key
+      - UPLOAD_DIR=/app/uploads
+      - STORAGE_DIR=/app/storage
+    networks:
+      - app-network
+
+  # 프론트엔드 서비스
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+# 볼륨 설정
+volumes:
+  mongodb_data:
+
+# 네트워크 설정
+networks:
+  app-network:
+    driver: bridge
